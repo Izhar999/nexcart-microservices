@@ -7,7 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from rest_framework.permissions import IsAuthenticated
 from .serializers import ProfileSerializer
-
+from .permissions import IsAdmin
 
 class RegisterView(APIView):
 
@@ -58,3 +58,15 @@ class ProfileView(APIView):
     def get(self,request):
         serializer=ProfileSerializer(request.user)
         return Response(serializer.data)
+    
+class AdminDashboardView(APIView):
+    permission_classes=[IsAuthenticated,IsAdmin]
+
+    def get(self,request):
+        return Response(
+            {
+            "message":"Welcome Admin!",
+            "user":request.user.username,
+            "role":request.user.role,
+            }
+        )
